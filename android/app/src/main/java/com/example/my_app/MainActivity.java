@@ -1,4 +1,4 @@
-package com.example.my_app;
+package com.example.kana_listening_test;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

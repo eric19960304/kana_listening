@@ -1,4 +1,4 @@
-# my_app
+# Japanese Kana Listening Test
 
 A new Flutter project.
 

@@ -1,5 +1,5 @@
-name: my_app
-description: A new Flutter project.
+name: kana_listening_test
+description: A Flutter App that randomly generate Japanese vocabulary-based listening multiple choice questions that each option is one character differs from the correct word.
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
