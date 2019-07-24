@@ -8,6 +8,4 @@ Screenshots:
 
 For the word list, please refer to [/assets/allVocab.json](https://github.com/eric19960304/Kana-Listening-Test/blob/master/assets/allVocab.json)
 
-For Android user, the APK can be downloaded via [this link](https://drive.google.com/file/d/1yX4xLmWXq7maGVTqYPrchzWctZtCaXFL/view).
-
-For iOS users, sorry you have to own a macbook and follow [Flutter official documentation](https://flutter.dev/docs/get-started/install/macos) to build it for yourself.
+Refer to [Flutter official documentation](https://flutter.dev/docs/get-started/install) to build the project.
