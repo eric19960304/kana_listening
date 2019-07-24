@@ -45,22 +45,29 @@ class _MyHomePageState extends State<MyHomePage> {
   Vocab vocab;
   bool isShowAnswer;
   bool isAudioPlaying;
+  bool isLoading;
   String audioUrl;
   AudioPlayer audioPlayer;
 
   @override
   initState() {
     super.initState();
-
     counter = 1;
     vocab = widget.vocabs.drawWord();
     isShowAnswer = false;
     isAudioPlaying = false;
+    isLoading = false;
     audioUrl = "";
     audioPlayer = AudioPlayer();
     audioPlayer.onPlayerCompletion.listen((event) {
       setState(() {
         isAudioPlaying = false;
+      });
+    });
+    getVocabAudioUrl(vocab).then((result) {
+      setState(() {
+        audioUrl = result;
+        isLoading = true;
       });
     });
   }
@@ -93,120 +100,122 @@ class _MyHomePageState extends State<MyHomePage> {
     String questionNumber = counter.toString();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Q'+questionNumber,
-              style: Theme.of(context).textTheme.display2,
-              textAlign: TextAlign.center,
-            ),
-            Visibility(
-              child: Expanded(
-                child: new Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    child: Ink(
-                      decoration: ShapeDecoration(
-                        color: Colors.green,
-                        shape: CircleBorder(),
-                      ),
-                      child: IconButton(
-                        icon: isAudioPlaying ? Icon(Icons.pause) : Icon(Icons.play_arrow),
-                        iconSize: 60.0,
-                        color: Colors.white,
-                        tooltip: 'Pronounce',
-                        onPressed: _playAudio,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              visible: !isShowAnswer,
-            ),
-            Visibility(
-              child: new Expanded(
-                child: new Align(
-                    alignment: Alignment.center,
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            vocab.word,
-                            style: Theme.of(context).textTheme.display2,
-                            textAlign: TextAlign.center,
-                          ),
-                          Visibility(
-                            child: Text(
-                              vocab.hiragana,
-                              style: Theme.of(context).textTheme.display2,
-                              textAlign: TextAlign.center,
-                            ),
-                            visible: isHiraganaExist,
-                          ),
-                          new Container(
-                            margin: const EdgeInsets.only(bottom: 15.0),
-                            child: Text(vocab.romaji,
-                            style: Theme.of(context).textTheme.display1,
-                            textAlign: TextAlign.center),
-                          ),
-                          Text(
-                            '[${vocab.meaning}]',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 18.0
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ])),
-              ),
-              visible: isShowAnswer,
-            ),
-            new Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: Visibility(
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
-                  child: Ink(
-                    decoration: ShapeDecoration(
-                      color: Colors.white,
-                      shape: CircleBorder(),
-                    ),
-                    child: IconButton(
-                      icon: Icon(Icons.visibility),
-                      iconSize: 36.0,
-                      color: Colors.black87,
-                      tooltip: 'Show Answer',
-                      onPressed: _showAnswer,
+                Text(
+                  'Q' + questionNumber,
+                  style: Theme.of(context).textTheme.display2,
+                  textAlign: TextAlign.center,
+                ),
+                Visibility(
+                  child: Expanded(
+                    child: new Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        child: Ink(
+                          decoration: ShapeDecoration(
+                            color: Colors.green,
+                            shape: CircleBorder(),
+                          ),
+                          child: IconButton(
+                            icon: isAudioPlaying
+                                ? Icon(Icons.pause)
+                                : Icon(Icons.play_arrow),
+                            iconSize: 60.0,
+                            color: Colors.white,
+                            tooltip: 'Pronounce',
+                            onPressed: _playAudio,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
+                  visible: !isShowAnswer,
                 ),
-                Container(
-                  child: Ink(
-                    decoration: ShapeDecoration(
-                      color: Colors.white,
-                      shape: CircleBorder(),
-                    ),
-                    child: IconButton(
-                      icon: Icon(Icons.navigate_next),
-                      iconSize: 36.0,
-                      color: Colors.black87,
-                      tooltip: 'Next Word',
-                      onPressed: _displayNextWord,
-                    ),
+                Visibility(
+                  child: new Expanded(
+                    child: new Align(
+                        alignment: Alignment.center,
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                vocab.word,
+                                style: Theme.of(context).textTheme.display2,
+                                textAlign: TextAlign.center,
+                              ),
+                              Visibility(
+                                child: Text(
+                                  vocab.hiragana,
+                                  style: Theme.of(context).textTheme.display2,
+                                  textAlign: TextAlign.center,
+                                ),
+                                visible: isHiraganaExist,
+                              ),
+                              new Container(
+                                margin: const EdgeInsets.only(bottom: 15.0),
+                                child: Text(vocab.romaji,
+                                    style: Theme.of(context).textTheme.display1,
+                                    textAlign: TextAlign.center),
+                              ),
+                              Text(
+                                '[${vocab.meaning}]',
+                                style: TextStyle(
+                                    color: Colors.grey, fontSize: 18.0),
+                                textAlign: TextAlign.center,
+                              ),
+                            ])),
                   ),
+                  visible: isShowAnswer,
                 ),
+                new Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Container(
+                      child: Ink(
+                        decoration: ShapeDecoration(
+                          color: Colors.white,
+                          shape: CircleBorder(),
+                        ),
+                        child: IconButton(
+                          icon: Icon(Icons.visibility),
+                          iconSize: 36.0,
+                          color: Colors.black87,
+                          tooltip: 'Show Answer',
+                          onPressed: _showAnswer,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Ink(
+                        decoration: ShapeDecoration(
+                          color: Colors.white,
+                          shape: CircleBorder(),
+                        ),
+                        child: IconButton(
+                          icon: Icon(Icons.navigate_next),
+                          iconSize: 36.0,
+                          color: Colors.black87,
+                          tooltip: 'Next Word',
+                          onPressed: _displayNextWord,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Text('\n')
               ],
             ),
-            Text('\n')
-          ],
-        ),
-      ),
-    );
+          ),
+          visible: isLoading,
+        ));
   }
 }
 
@@ -273,7 +282,6 @@ class VocabAudioResponse {
     );
   }
 }
-
 
 Future<String> getVocabAudioUrl(vocab) async {
   var url = 'https://ttsmp3.com/makemp3.php';
