@@ -73,10 +73,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _displayNextWord() async {
-    audioUrl = await getVocabAudioUrl(vocab);
+    Vocab newVocab = widget.vocabs.drawWord();
+    String url = await getVocabAudioUrl(newVocab);
     setState(() {
+      audioUrl = url;
       counter++;
-      vocab = widget.vocabs.drawWord();
+      vocab = newVocab;
       isShowAnswer = false;
     });
   }
