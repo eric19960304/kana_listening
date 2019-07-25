@@ -25571,13 +25571,6 @@
         "level": 2
     },
     {
-        "word": "しいんと",
-        "meaning": "silent (as the grave), (deathly) quiet",
-        "hiragana": "（する）",
-        "romaji": "(suru)",
-        "level": 2
-    },
-    {
         "word": "ロビー",
         "meaning": "lobby",
         "hiragana": "",
@@ -27248,13 +27241,6 @@
         "meaning": "chopsticks",
         "hiragana": "はし",
         "romaji": "hashi",
-        "level": 2
-    },
-    {
-        "word": "ミリ",
-        "meaning": "milli-, 10^-3",
-        "hiragana": "（メートル）",
-        "romaji": "(mētoru)",
         "level": 2
     },
     {
@@ -33163,13 +33149,6 @@
         "meaning": "rotation, revolution, turning",
         "hiragana": "かいてん",
         "romaji": "kaiten",
-        "level": 2
-    },
-    {
-        "word": "じゅうたん",
-        "meaning": "carpet",
-        "hiragana": "（カーペット）",
-        "romaji": "(kāpetto)",
         "level": 2
     },
     {
@@ -41820,8 +41799,8 @@
     {
         "word": "できる",
         "meaning": "to be able to, to be ready, to occur",
-        "hiragana": "（可能。出現。発生）",
-        "romaji": "(..)",
+        "hiragana": "",
+        "romaji": "dekiru",
         "level": 3
     },
     {
@@ -42228,13 +42207,6 @@
         "meaning": "to hit, to strike",
         "hiragana": "ぶつ",
         "romaji": "butsu",
-        "level": 3
-    },
-    {
-        "word": "しまい",
-        "meaning": "sisters",
-        "hiragana": "（終わり）",
-        "romaji": "(wari)",
         "level": 3
     },
     {
@@ -44562,13 +44534,6 @@
         "level": 3
     },
     {
-        "word": "とん",
-        "meaning": "ton",
-        "hiragana": "（1000",
-        "romaji": "(",
-        "level": 3
-    },
-    {
         "word": "現実",
         "meaning": "reality",
         "hiragana": "げんじつ",
@@ -45558,8 +45523,8 @@
     {
         "word": "それ",
         "meaning": "it, that",
-        "hiragana": "（接。感）",
-        "romaji": "(.)",
+        "hiragana": "",
+        "romaji": "sore",
         "level": 3
     },
     {
@@ -45910,13 +45875,6 @@
         "meaning": "enemy, rival",
         "hiragana": "てき",
         "romaji": "teki",
-        "level": 3
-    },
-    {
-        "word": "しまう",
-        "meaning": "to finish, to close, to do something completely",
-        "hiragana": "（終わる）",
-        "romaji": "(waru)",
         "level": 3
     },
     {
@@ -49277,13 +49235,6 @@
         "meaning": "to separate, to set free",
         "hiragana": "はなす",
         "romaji": "hanasu",
-        "level": 3
-    },
-    {
-        "word": "どう",
-        "meaning": "child, servant, foolishness",
-        "hiragana": "（接。副）",
-        "romaji": "(.)",
         "level": 3
     },
     {
