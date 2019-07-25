@@ -1,6 +1,6 @@
 # Japanese Kana Listening Test
 
-A Japanese Vocabulary Testing App that randomly draw Japanese Vocabulary from N5 to N1 level, providing pronunciation player and answer checking.
+A Flutter App that randomly draws Japanese Vocabularies from N5 to N1 level to test your listening, providing pronunciation and answer checking.
 
 Screenshots:
 
