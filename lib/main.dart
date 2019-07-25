@@ -298,8 +298,7 @@ class Vocabs {
   Vocab drawWord() {
     do {
       this.position = rand.nextInt(this.vocabsList.length);
-    } while (this.vocabsList[this.position].word.length < 4 ||
-        this.vocabsList[this.position].word.length < 4 ||
+    } while (this.vocabsList[this.position].word.length < 4  ||
         this.vocabsList[this.position].meaning.length == 0);
     return this.vocabsList[this.position];
   }
