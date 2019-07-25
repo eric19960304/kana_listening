@@ -107,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
     String result = isInputCorrect ? 'O' : 'X';
 
     var textfiledPadding =
-        (MediaQuery.of(context).viewInsets.bottom - 76.0).abs();
+        (MediaQuery.of(context).viewInsets.bottom - 56.0).abs();
 
     return Scaffold(
         resizeToAvoidBottomPadding: false,
@@ -117,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
         body: Visibility(
           visible: !isLoading,
           child: Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.all(10.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -126,8 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: new Align(
                     alignment: Alignment.topCenter,
                     child: Container(
-                        padding: EdgeInsets.only(
-                            top: 20.0, bottom: textfiledPadding),
+                        padding: EdgeInsets.only(bottom: textfiledPadding),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
@@ -138,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                             Container(
                               margin: const EdgeInsets.only(
-                                  top: 30.0, bottom: 30.0),
+                                  top: 15.0, bottom: 15.0),
                               child: Ink(
                                 decoration: ShapeDecoration(
                                   color: Colors.green,
@@ -148,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   icon: isAudioPlaying
                                       ? Icon(Icons.pause)
                                       : Icon(Icons.play_arrow),
-                                  iconSize: 80.0,
+                                  iconSize: 76.0,
                                   color: Colors.white,
                                   tooltip: 'Pronounce',
                                   onPressed: _playAudio,
@@ -166,8 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   hintText: 'Enter the word you heard',
                                   filled: true,
                                   fillColor: Colors.black26,
-                                  contentPadding: const EdgeInsets.only(
-                                      left: 14.0, bottom: 8.0, top: 8.0),
+                                  contentPadding: const EdgeInsets.only(bottom: 8.0, top: 8.0),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide:
                                         BorderSide(color: Colors.black26),
@@ -234,7 +232,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   visible: isShowAnswer,
                 ),
                 new Container(
-                  padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                  padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
