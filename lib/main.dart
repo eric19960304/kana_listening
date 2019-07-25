@@ -288,7 +288,7 @@ class Vocabs {
   }
 
   static Future<Vocabs> loadVocabs() async {
-    String vocabJson = await rootBundle.loadString("assets/allVocab.json");
+    String vocabJson = await rootBundle.loadString("assets/n5_to_n1.json");
     final jsonResponse = (jsonDecode(vocabJson) as List)
         .map((e) => new Vocab.fromJson(e))
         .toList();
