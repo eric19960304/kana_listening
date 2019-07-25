@@ -4,8 +4,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:http/http.dart' as http;
-import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 void main() async {
   final Vocabs vocabs = await Vocabs.loadVocabs();
@@ -46,9 +45,8 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isShowAnswer;
   bool isAudioPlaying;
   bool isLoading;
-  String audioUrl;
   TextEditingController userInputController;
-  AudioPlayer audioPlayer;
+  FlutterTts flutterTts;
 
   @override
   initState() {
@@ -57,28 +55,26 @@ class _MyHomePageState extends State<MyHomePage> {
     vocab = widget.vocabs.drawWord();
     isShowAnswer = false;
     isAudioPlaying = false;
-    isLoading = false;
-    audioUrl = "";
-    audioPlayer = new AudioPlayer();
+    isLoading = true;
     userInputController = new TextEditingController();
-    audioPlayer.onPlayerCompletion.listen((event) {
+
+    flutterTts = new FlutterTts();
+    flutterTts.setCompletionHandler(() {
       setState(() {
         isAudioPlaying = false;
       });
     });
-    getVocabAudioUrl(vocab).then((result) {
+
+    flutterTts.setLanguage("ja-JP").then((result) {
       setState(() {
-        audioUrl = result;
-        isLoading = true;
+        isLoading = false;
       });
     });
   }
 
-  void _displayNextWord() async {
+  void _displayNextWord() {
     Vocab newVocab = widget.vocabs.drawWord();
-    String url = await getVocabAudioUrl(newVocab);
     setState(() {
-      audioUrl = url;
       counter++;
       vocab = newVocab;
       isShowAnswer = false;
@@ -93,34 +89,33 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _playAudio() async {
-    setState(() {
-      isAudioPlaying = true;
-    });
-    await audioPlayer.play(audioUrl);
+    int result = await flutterTts.speak(vocab.word);
+    if (result == 1) setState(() => isAudioPlaying = true);
   }
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is removed from the
-    // widget tree.
     userInputController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    bool isHiraganaExist = vocab.hiragana.length > 0;
     String questionNumber = counter.toString();
-    bool isInputCorrect = isHiraganaExist
-        ? vocab.hiragana == userInputController.text
-        : vocab.word == userInputController.text;
+    bool isInputCorrect = userInputController.text == vocab.word ||
+        (vocab.hasHiragana() && userInputController.text == vocab.hiragana);
     String result = isInputCorrect ? 'O' : 'X';
 
+    var textfiledPadding =
+        (MediaQuery.of(context).viewInsets.bottom - 76.0).abs();
+
     return Scaffold(
+        resizeToAvoidBottomPadding: false,
         appBar: AppBar(
           title: Text(widget.title),
         ),
         body: Visibility(
+          visible: !isLoading,
           child: Padding(
             padding: const EdgeInsets.all(15.0),
             child: Column(
@@ -128,18 +123,22 @@ class _MyHomePageState extends State<MyHomePage> {
               children: <Widget>[
                 Visibility(
                   child: Expanded(
-                    child: new Align(
-                        alignment: Alignment.center,
+                      child: new Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                        padding: EdgeInsets.only(
+                            top: 20.0, bottom: textfiledPadding),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Text(
                               'Q$questionNumber',
-                              style: Theme.of(context).textTheme.display2,
+                              style: Theme.of(context).textTheme.display1,
                               textAlign: TextAlign.center,
                             ),
                             Container(
-                              margin: const EdgeInsets.only(top: 8.0),
+                              margin: const EdgeInsets.only(
+                                  top: 30.0, bottom: 30.0),
                               child: Ink(
                                 decoration: ShapeDecoration(
                                   color: Colors.green,
@@ -149,20 +148,22 @@ class _MyHomePageState extends State<MyHomePage> {
                                   icon: isAudioPlaying
                                       ? Icon(Icons.pause)
                                       : Icon(Icons.play_arrow),
-                                  iconSize: 54.0,
+                                  iconSize: 80.0,
                                   color: Colors.white,
                                   tooltip: 'Pronounce',
                                   onPressed: _playAudio,
                                 ),
                               ),
                             ),
-                            Text(''),
                             new Center(
                               child: TextField(
                                 textAlign: TextAlign.center,
                                 controller: userInputController,
+                                onSubmitted: (input) {
+                                  _showAnswer();
+                                },
                                 decoration: InputDecoration(
-                                  hintText: 'Enter a the word',
+                                  hintText: 'Enter the word you heard',
                                   filled: true,
                                   fillColor: Colors.black26,
                                   contentPadding: const EdgeInsets.only(
@@ -182,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                           ],
                         )),
-                  ),
+                  )),
                   visible: !isShowAnswer,
                 ),
                 Visibility(
@@ -203,7 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   style: Theme.of(context).textTheme.display2,
                                   textAlign: TextAlign.center,
                                 ),
-                                visible: isHiraganaExist,
+                                visible: vocab.hasHiragana(),
                               ),
                               new Container(
                                 margin: const EdgeInsets.only(bottom: 15.0),
@@ -217,52 +218,62 @@ class _MyHomePageState extends State<MyHomePage> {
                                     color: Colors.grey, fontSize: 18.0),
                                 textAlign: TextAlign.center,
                               ),
-                              Text(''),
-                              Text(
-                                  'Your input: ${userInputController.text} ($result)')
+                              Visibility(
+                                visible: userInputController.text.length > 0,
+                                child: Container(
+                                  padding: const EdgeInsets.only(
+                                      top: 45.0, bottom: 15.0),
+                                  child: Text(
+                                    'Your input: ${userInputController.text} ($result)',
+                                    style: TextStyle(color: isInputCorrect? Colors.green : Colors.red),
+                                  ),
+                                ),
+                              )
                             ])),
                   ),
                   visible: isShowAnswer,
                 ),
-                new Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Container(
-                      child: Ink(
-                        decoration: ShapeDecoration(
-                          color: Colors.white,
-                          shape: CircleBorder(),
-                        ),
-                        child: IconButton(
-                          icon: Icon(Icons.visibility),
-                          iconSize: 36.0,
-                          color: Colors.black87,
-                          tooltip: 'Show Answer',
-                          onPressed: _showAnswer,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      child: Ink(
-                        decoration: ShapeDecoration(
-                          color: Colors.white,
-                          shape: CircleBorder(),
-                        ),
-                        child: IconButton(
-                          icon: Icon(Icons.navigate_next),
-                          iconSize: 36.0,
-                          color: Colors.black87,
-                          tooltip: 'Next Word',
-                          onPressed: _displayNextWord,
+                new Container(
+                  padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Container(
+                        child: Ink(
+                          decoration: ShapeDecoration(
+                            color: Colors.white,
+                            shape: CircleBorder(),
+                          ),
+                          child: IconButton(
+                            icon: Icon(Icons.visibility),
+                            iconSize: 36.0,
+                            color: Colors.black87,
+                            tooltip: 'Show Answer',
+                            onPressed: _showAnswer,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                      Container(
+                        child: Ink(
+                          decoration: ShapeDecoration(
+                            color: Colors.white,
+                            shape: CircleBorder(),
+                          ),
+                          child: IconButton(
+                            icon: Icon(Icons.navigate_next),
+                            iconSize: 36.0,
+                            color: Colors.black87,
+                            tooltip: 'Next Word',
+                            onPressed: _displayNextWord,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
           ),
-          visible: isLoading,
         ));
   }
 }
@@ -303,7 +314,21 @@ class Vocab {
   String romaji;
   int level;
 
-  Vocab({this.word, this.meaning, this.hiragana, this.romaji, this.level});
+  Vocab({word, meaning, hiragana, romaji, level}) {
+    this.word = word;
+    this.meaning = meaning;
+    this.hiragana = hiragana;
+    this.romaji = romaji;
+    this.level = level;
+  }
+
+  String getPronounciationText() {
+    return hasHiragana() ? this.hiragana : this.word;
+  }
+
+  bool hasHiragana() {
+    return this.hiragana.length > 0;
+  }
 
   factory Vocab.fromJson(Map<String, dynamic> json) {
     return Vocab(
@@ -313,37 +338,4 @@ class Vocab {
         romaji: json["romaji"],
         level: json["level"]);
   }
-}
-
-class VocabAudioResponse {
-  String text;
-  String url;
-  String mp3;
-
-  VocabAudioResponse({this.text, this.url, this.mp3});
-
-  factory VocabAudioResponse.fromJson(Map<String, dynamic> json) {
-    return VocabAudioResponse(
-      text: json["Text"],
-      url: json["URL"],
-      mp3: json["MP3"],
-    );
-  }
-}
-
-Future<String> getVocabAudioUrl(vocab) async {
-  var url = 'https://ttsmp3.com/makemp3.php';
-  String msg = "";
-  if (vocab.hiragana.length > 0) {
-    msg = vocab.hiragana;
-  } else {
-    msg = vocab.word;
-  }
-  var response = await http
-      .post(url, body: {'msg': msg, 'lang': 'Mizuki', 'source': 'ttsmp3'});
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${response.body}');
-  final jsonResponse = jsonDecode(response.body);
-  VocabAudioResponse res = new VocabAudioResponse.fromJson(jsonResponse);
-  return res.url;
 }
