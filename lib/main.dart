@@ -47,6 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isAudioPlaying;
   bool isLoading;
   String audioUrl;
+  TextEditingController userInputController;
   AudioPlayer audioPlayer;
 
   @override
@@ -58,7 +59,8 @@ class _MyHomePageState extends State<MyHomePage> {
     isAudioPlaying = false;
     isLoading = false;
     audioUrl = "";
-    audioPlayer = AudioPlayer();
+    audioPlayer = new AudioPlayer();
+    userInputController = new TextEditingController();
     audioPlayer.onPlayerCompletion.listen((event) {
       setState(() {
         isAudioPlaying = false;
@@ -80,6 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
       counter++;
       vocab = newVocab;
       isShowAnswer = false;
+      userInputController.clear();
     });
   }
 
@@ -97,9 +100,21 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+    userInputController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     bool isHiraganaExist = vocab.hiragana.length > 0;
     String questionNumber = counter.toString();
+    bool isInputCorrect = isHiraganaExist
+        ? vocab.hiragana == userInputController.text
+        : vocab.word == userInputController.text;
+    String result = isInputCorrect ? 'O' : 'X';
 
     return Scaffold(
         appBar: AppBar(
@@ -111,33 +126,62 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  'Q' + questionNumber,
-                  style: Theme.of(context).textTheme.display2,
-                  textAlign: TextAlign.center,
-                ),
                 Visibility(
                   child: Expanded(
                     child: new Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        child: Ink(
-                          decoration: ShapeDecoration(
-                            color: Colors.green,
-                            shape: CircleBorder(),
-                          ),
-                          child: IconButton(
-                            icon: isAudioPlaying
-                                ? Icon(Icons.pause)
-                                : Icon(Icons.play_arrow),
-                            iconSize: 60.0,
-                            color: Colors.white,
-                            tooltip: 'Pronounce',
-                            onPressed: _playAudio,
-                          ),
-                        ),
-                      ),
-                    ),
+                        alignment: Alignment.center,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              'Q$questionNumber',
+                              style: Theme.of(context).textTheme.display2,
+                              textAlign: TextAlign.center,
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 8.0),
+                              child: Ink(
+                                decoration: ShapeDecoration(
+                                  color: Colors.green,
+                                  shape: CircleBorder(),
+                                ),
+                                child: IconButton(
+                                  icon: isAudioPlaying
+                                      ? Icon(Icons.pause)
+                                      : Icon(Icons.play_arrow),
+                                  iconSize: 54.0,
+                                  color: Colors.white,
+                                  tooltip: 'Pronounce',
+                                  onPressed: _playAudio,
+                                ),
+                              ),
+                            ),
+                            Text(''),
+                            new Center(
+                              child: TextField(
+                                textAlign: TextAlign.center,
+                                controller: userInputController,
+                                decoration: InputDecoration(
+                                  hintText: 'Enter a the word',
+                                  filled: true,
+                                  fillColor: Colors.black26,
+                                  contentPadding: const EdgeInsets.only(
+                                      left: 14.0, bottom: 8.0, top: 8.0),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.black26),
+                                    borderRadius: BorderRadius.circular(25.7),
+                                  ),
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.black26),
+                                    borderRadius: BorderRadius.circular(25.7),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )),
                   ),
                   visible: !isShowAnswer,
                 ),
@@ -173,6 +217,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                     color: Colors.grey, fontSize: 18.0),
                                 textAlign: TextAlign.center,
                               ),
+                              Text(''),
+                              Text(
+                                  'Your input: ${userInputController.text} ($result)')
                             ])),
                   ),
                   visible: isShowAnswer,
@@ -212,7 +259,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ],
                 ),
-                Text('\n')
               ],
             ),
           ),
