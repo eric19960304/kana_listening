@@ -25781,10 +25781,10 @@
         "level": 2
     },
     {
-        "word": "アイデア / アイディア",
+        "word": "アイディア",
         "meaning": "idea",
         "hiragana": "",
-        "romaji": "aidea / aidia",
+        "romaji": "aidia",
         "level": 2
     },
     {
@@ -27174,7 +27174,7 @@
         "level": 2
     },
     {
-        "word": "作る / 造る",
+        "word": "作る",
         "meaning": "to make, to create",
         "hiragana": "つくる",
         "romaji": "tsukuru",
@@ -37002,10 +37002,10 @@
         "level": 2
     },
     {
-        "word": "けれど / けれども",
+        "word": "けれど",
         "meaning": "but, however",
         "hiragana": "",
-        "romaji": "keredo / keredomo",
+        "romaji": "keredo",
         "level": 2
     },
     {
@@ -49938,10 +49938,10 @@
         "level": 4
     },
     {
-        "word": "お・金持ち",
+        "word": "お金持ち",
         "meaning": "rich man",
-        "hiragana": "かねもち / おかねもち",
-        "romaji": "kanemochi / okanemochi",
+        "hiragana": "おかねもち",
+        "romaji": "okanemochi",
         "level": 4
     },
     {
@@ -51457,10 +51457,10 @@
         "level": 4
     },
     {
-        "word": "コンピュータ / コンピューター",
+        "word": "コンピューター",
         "meaning": "computer",
         "hiragana": "",
-        "romaji": "konpyūta / konpyūtā",
+        "romaji": "konpyūtā",
         "level": 4
     },
     {
@@ -51968,10 +51968,10 @@
         "level": 4
     },
     {
-        "word": "やはり / やっぱり",
+        "word": "やはり",
         "meaning": "as I thought, absolutely",
         "hiragana": "",
-        "romaji": "yahari / yappari",
+        "romaji": "yahari",
         "level": 4
     },
     {
@@ -53207,10 +53207,10 @@
         "level": 4
     },
     {
-        "word": "けれど / けれども",
+        "word": "けれど",
         "meaning": "however",
         "hiragana": "",
-        "romaji": "keredo / keredomo",
+        "romaji": "keredo",
         "level": 4
     },
     {
@@ -53263,7 +53263,7 @@
         "level": 4
     },
     {
-        "word": "堅 / 硬/固い",
+        "word": "固い",
         "meaning": "hard",
         "hiragana": "かたい",
         "romaji": "katai",
@@ -53445,10 +53445,10 @@
         "level": 4
     },
     {
-        "word": "レポート / リポート",
+        "word": "レポート",
         "meaning": "report",
         "hiragana": "",
-        "romaji": "repōto / ripōto",
+        "romaji": "repōto",
         "level": 4
     },
     {
@@ -54140,8 +54140,8 @@
     {
         "word": "九",
         "meaning": "nine",
-        "hiragana": "きゅう / く",
-        "romaji": "kyū / ku",
+        "hiragana": "きゅう",
+        "romaji": "kyū",
         "level": 5
     },
     {
@@ -54357,8 +54357,8 @@
     {
         "word": "何",
         "meaning": "what",
-        "hiragana": "なん / なに",
-        "romaji": "nan / nani",
+        "hiragana": "なん",
+        "romaji": "nan",
         "level": 5
     },
     {
@@ -54371,8 +54371,8 @@
     {
         "word": "毎月",
         "meaning": "every month",
-        "hiragana": "まいげつ / まいつき",
-        "romaji": "maigetsu / maitsuki",
+        "hiragana": "まいげつ",
+        "romaji": "maigetsu",
         "level": 5
     },
     {
@@ -54509,10 +54509,10 @@
         "level": 5
     },
     {
-        "word": "いい / よい",
+        "word": "いい",
         "meaning": "good",
         "hiragana": "",
-        "romaji": "ii / yoi",
+        "romaji": "ii",
         "level": 5
     },
     {
@@ -55083,10 +55083,10 @@
         "level": 5
     },
     {
-        "word": "キロ / キログラム",
+        "word": "キログラム",
         "meaning": "kilogram",
         "hiragana": "",
-        "romaji": "kiro / kiroguramu",
+        "romaji": "kiroguramu",
         "level": 5
     },
     {
@@ -55300,10 +55300,10 @@
         "level": 5
     },
     {
-        "word": "ラジカセ / ラジオカセット",
+        "word": "ラジオカセット",
         "meaning": "radio cassette player",
         "hiragana": "",
-        "romaji": "rajikase / rajiokasetto",
+        "romaji": "rajiokasetto",
         "level": 5
     },
     {
@@ -55337,8 +55337,8 @@
     {
         "word": "四",
         "meaning": "four",
-        "hiragana": "し / よん",
-        "romaji": "shi / yon",
+        "hiragana": "し",
+        "romaji": "shi",
         "level": 5
     },
     {
@@ -55370,10 +55370,10 @@
         "level": 5
     },
     {
-        "word": "そうして / そして",
+        "word": "そうして",
         "meaning": "and",
         "hiragana": "",
-        "romaji": "sōshite / soshite",
+        "romaji": "sōshite",
         "level": 5
     },
     {
@@ -55526,8 +55526,8 @@
     {
         "word": "七",
         "meaning": "seven",
-        "hiragana": "しち / なな",
-        "romaji": "shichi / nana",
+        "hiragana": "しち",
+        "romaji": "shichi",
         "level": 5
     },
     {
@@ -55920,13 +55920,6 @@
         "meaning": "ticket",
         "hiragana": "きっぷ",
         "romaji": "kippu",
-        "level": 5
-    },
-    {
-        "word": "キロ / キロメートル",
-        "meaning": "kilometre",
-        "hiragana": "",
-        "romaji": "kiro / kiromētoru",
         "level": 5
     },
     {
@@ -56560,10 +56553,10 @@
         "level": 5
     },
     {
-        "word": "じゃ / じゃあ",
+        "word": "じゃあ",
         "meaning": "well then…",
         "hiragana": "",
-        "romaji": "ja / jaa",
+        "romaji": "jaa",
         "level": 5
     },
     {
@@ -56618,8 +56611,8 @@
     {
         "word": "毎年",
         "meaning": "every year",
-        "hiragana": "まいねん / まいとし",
-        "romaji": "mainen / maitoshi",
+        "hiragana": "まいとし",
+        "romaji": "maitoshi",
         "level": 5
     },
     {
@@ -56924,7 +56917,7 @@
         "level": 5
     },
     {
-        "word": "川 / 河",
+        "word": "川",
         "meaning": "river",
         "hiragana": "かわ",
         "romaji": "kawa",
@@ -57904,7 +57897,7 @@
         "level": 5
     },
     {
-        "word": "伯父 / 叔父",
+        "word": "伯父",
         "meaning": "grandfather, male senior citizen",
         "hiragana": "おじいさん",
         "romaji": "ojiisan",
@@ -58142,7 +58135,7 @@
         "level": 5
     },
     {
-        "word": "丸い / 円い",
+        "word": "丸い",
         "meaning": "round, circular",
         "hiragana": "まるい",
         "romaji": "marui",
@@ -58198,7 +58191,7 @@
         "level": 5
     },
     {
-        "word": "伯母さん / 叔母さん",
+        "word": "伯母さん",
         "meaning": "aunt",
         "hiragana": "おばさん",
         "romaji": "obasan",
@@ -58569,7 +58562,7 @@
         "level": 5
     },
     {
-        "word": "初め / 始め",
+        "word": "初め",
         "meaning": "beginning",
         "hiragana": "はじめ",
         "romaji": "hajime",

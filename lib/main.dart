@@ -89,7 +89,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _playAudio() async {
-    int result = await flutterTts.speak(vocab.word);
+
+    int result = await flutterTts.speak(vocab.getPronounciationText());
     if (result == 1) setState(() => isAudioPlaying = true);
   }
 
