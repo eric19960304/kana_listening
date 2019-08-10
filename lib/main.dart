@@ -56,7 +56,7 @@ class _MyApp extends State<MyApp> {
             title: Text('Kana Listening Test'),
           ),
           body: Center(
-            child: Text('Loading'),
+            child: Text('Loading...'),
           ),
         )
         :
