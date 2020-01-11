@@ -35,6 +35,7 @@ if __name__ == '__main__':
     
     createdTime = round(time())
     shuffle(wordList)
+    print("number of words: ", len(wordList))
 
     for d in wordList:
         word = d['word']
@@ -52,3 +53,4 @@ if __name__ == '__main__':
     if conn:
         conn.close()
     
+    print("sqlite3.db created.")

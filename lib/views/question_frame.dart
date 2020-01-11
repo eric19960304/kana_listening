@@ -4,14 +4,14 @@ import 'package:flutter_tts/flutter_tts.dart';
 import '../models/vocabs.dart'; // includes Vocabs and Vocab classes
 
 class QuestionFrame extends StatefulWidget {
-  const QuestionFrame({
-    Key key,
-    this.vocab,
-    this.userInputController,
-    this.questionNumber,
-    this.showAnswer,
-    this.flutterTts}
-    ) : super(key: key);
+  const QuestionFrame(
+      {Key key,
+      this.vocab,
+      this.userInputController,
+      this.questionNumber,
+      this.showAnswer,
+      this.flutterTts})
+      : super(key: key);
 
   final Vocab vocab;
   final TextEditingController userInputController;
@@ -23,13 +23,11 @@ class QuestionFrame extends StatefulWidget {
 }
 
 class _QuestionFrameState extends State<QuestionFrame> {
-  bool isAudioPlaying;
+  bool isAudioPlaying = false;
 
   @override
   initState() {
     super.initState();
-
-    isAudioPlaying = false;
 
     widget.flutterTts.setCompletionHandler(() {
       setState(() {
@@ -39,18 +37,20 @@ class _QuestionFrameState extends State<QuestionFrame> {
   }
 
   void playAudio() async {
-    int result = await widget.flutterTts.speak(widget.vocab.getPronounciationText());
+    int result =
+        await widget.flutterTts.speak(widget.vocab.getPronounciationText());
     if (result == 1) setState(() => isAudioPlaying = true);
   }
 
   @override
   Widget build(BuildContext context) {
-    var textfiledPadding = (MediaQuery.of(context).viewInsets.bottom - 56.0).abs();
+    var textfiledPadding =
+        (MediaQuery.of(context).viewInsets.bottom - 56.0).abs();
 
     return Expanded(
-      child: new Align(
-        alignment: Alignment.topCenter,
-        child: Container(
+        child: new Align(
+      alignment: Alignment.topCenter,
+      child: Container(
           padding: EdgeInsets.only(bottom: textfiledPadding),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -69,8 +69,8 @@ class _QuestionFrameState extends State<QuestionFrame> {
                   ),
                   child: IconButton(
                     icon: isAudioPlaying
-                      ? Icon(Icons.pause)
-                      : Icon(Icons.play_arrow),
+                        ? Icon(Icons.pause)
+                        : Icon(Icons.play_arrow),
                     iconSize: 76.0,
                     color: Colors.white,
                     tooltip: 'Pronounce',
@@ -103,9 +103,7 @@ class _QuestionFrameState extends State<QuestionFrame> {
                 ),
               ),
             ],
-          )
-        ),
-      )
-    );
+          )),
+    ));
   }
 }

@@ -6,7 +6,8 @@ import '../views/question_frame.dart';
 import '../views/answer_frame.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title, this.vocabs, this.flutterTts}) : super(key: key);
+  HomePage({Key key, this.title, this.vocabs, this.flutterTts})
+      : super(key: key);
 
   final String title;
   final Vocabs vocabs;
@@ -17,23 +18,24 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int counter;
-  bool isShowAnswer;
+  int counter = 1;
+  bool isShowAnswer = false;
   QuestionFrame qFrame;
   AnswerFrame aFrame;
-
   Vocabs vocabs;
   Vocab vocab;
-  TextEditingController userInputController;
+  TextEditingController userInputController = new TextEditingController();
 
   @override
   initState() {
     super.initState();
-    counter = 1;
-    vocab = widget.vocabs.drawWord();
-    isShowAnswer = false;
-    userInputController = new TextEditingController();
-    createNewFrames();
+
+    drawVocab().then((newVocab) {
+      setState(() {
+        vocab = newVocab;
+        createNewFrames();
+      });
+    });
   }
 
   @override
@@ -42,14 +44,23 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  void displayNextWord() {
-    Vocab newVocab = widget.vocabs.drawWord();
-    setState(() {
-      counter++;
-      vocab = newVocab;
-      isShowAnswer = false;
-      userInputController.clear();
-      createNewFrames();
+  Future<Vocab> drawVocab() async {
+    Vocab v;
+    do {
+      v = await widget.vocabs.drawWord();
+    } while (!v.isWantedVocab());
+    return v;
+  }
+
+  void displayNextWord() async {
+    drawVocab().then((newVocab) {
+      setState(() {
+        counter++;
+        vocab = newVocab;
+        isShowAnswer = false;
+        userInputController.clear();
+        createNewFrames();
+      });
     });
   }
 
