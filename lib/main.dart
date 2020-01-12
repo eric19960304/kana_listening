@@ -75,7 +75,7 @@ class _MyApp extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Kana Listening Test',
+        title: 'Kana Listening',
         theme: ThemeData(
           brightness: Brightness.dark,
           primarySwatch: Colors.blue,
@@ -83,14 +83,14 @@ class _MyApp extends State<MyApp> {
         home: isLoading
             ? Scaffold(
                 appBar: AppBar(
-                  title: Text('Kana Listening Test'),
+                  title: Text('Kana Listening'),
                 ),
                 body: Center(
                   child: Text('Loading...'),
                 ),
               )
             : HomePage(
-                title: 'Kana Listening Test',
+                title: 'Kana Listening',
                 vocabs: vocabs,
                 flutterTts: flutterTts),
         debugShowCheckedModeBanner: false);
