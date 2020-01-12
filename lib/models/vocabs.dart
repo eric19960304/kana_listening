@@ -76,21 +76,21 @@ class Vocab {
   }
 
   bool isCorrectPronounce(String input) {
-    var normalizedInput = "";
-    var hasChoonpu = false;
+    var normalizedRomaji = "";
+    var hasNormalized = false;
     var convertTable = { "ō": "oo", "ū": "uu", "ā": "aa", "ī": "ii", "ē": "ee" };
-    for(int i=0; i<input.length; i++) {
-      if(convertTable.containsKey(input[i])){
-        hasChoonpu = true;
-        normalizedInput += convertTable[input[i]];
+    for(int i=0; i<romaji.length; i++) {
+      if(convertTable.containsKey(romaji[i])){
+        hasNormalized = true;
+        normalizedRomaji += convertTable[romaji[i]];
       } else {
-        normalizedInput += input[i];
+        normalizedRomaji += romaji[i];
       }
     }
 
     return input == word ||
       input == romaji || 
-      (hasChoonpu && input == normalizedInput ) ||
+      (hasNormalized && input == normalizedRomaji) ||
       (hasHiragana() && input == hiragana);
   }
 }
