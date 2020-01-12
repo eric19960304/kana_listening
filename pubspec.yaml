@@ -1,8 +1,11 @@
-name: kana_listening_test
-description: A Flutter App that randomly generate Japanese vocabulary-based listening multiple choice questions that each option is one character differs from the correct word.
+name: kana_listening
+description: Japanese Vocabulary (Kana) Listening Test.
+
 version: 1.0.0+1
+
 environment:
   sdk: ">=2.1.0 <3.0.0"
+
 dependencies:
   flutter:
     sdk: flutter
@@ -10,10 +13,17 @@ dependencies:
   http: ^0.12.0
   flutter_tts:
   cupertino_icons: ^0.1.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: "^0.7.0"
+  flutter_launcher_icons: "^0.7.4"
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/db/sqlite3.db
+
 flutter_icons:
   ios: true
   android: true
@@ -21,7 +31,3 @@ flutter_icons:
   image_path_android: "assets/launcher/icon.png"
   adaptive_icon_background: "assets/launcher/icon.png"
   adaptive_icon_foreground: "assets/launcher/icon.png"
-flutter:
-  uses-material-design: true
-  assets:
-    - assets/db/sqlite3.db
