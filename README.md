@@ -8,7 +8,7 @@ An app that randomly draws Japanese vocabularies from N5 to N1 level to test you
 
 ## Vocabulary List
 
-For the word list, please refer to [/assets/db/n5_to_n1.json](https://github.com/eric19960304/Kana-Listening/blob/master/assets/db/n5_to_n1.json)
+For the word list, please refer to [/assets/db/n5_to_n1.json](https://raw.githubusercontent.com/eric19960304/Kana-Listening/master/assets/db/n5_to_n1.json)
 
 ## Privacy Policy
 
