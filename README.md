@@ -6,7 +6,7 @@ An app that randomly draws Japanese vocabularies from N5 to N1 level to test you
 
 <img src="https://raw.githubusercontent.com/eric19960304/Kana-Listening/master/demo/1.png" width="270"> <img src="https://raw.githubusercontent.com/eric19960304/Kana-Listening/master/demo/2.png" width="270"> <img src="https://raw.githubusercontent.com/eric19960304/Kana-Listening/master/demo/3.png" width="270">
 
-## Play Store
+## Google Play and App Store Link
 
 [![Get it on Google Play](https://raw.githubusercontent.com/eric19960304/Kana-Listening/master/demo/google_icon.png)](https://play.google.com/store/apps/details?id=com.eric19960304.kana_listening)
 
