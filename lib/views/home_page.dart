@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
-import '../models/vocabs.dart'; // includes Vocabs and Vocab classes
+import '../models/vocabs.dart';
 import '../views/question_frame.dart';
 import '../views/answer_frame.dart';
+import '../views/loading_frame.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title, this.vocabs, this.flutterTts})
@@ -18,12 +19,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int counter = 1;
-  bool isShowAnswer = false;
   QuestionFrame qFrame;
   AnswerFrame aFrame;
   Vocabs vocabs;
-  Vocab vocab;
+
+  int counter = 1;
+  bool isShowAnswer = false;
+  bool isLoading = true;
   TextEditingController userInputController = new TextEditingController();
 
   @override
@@ -31,9 +33,23 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     drawVocab().then((newVocab) {
+      if(newVocab==null){
+        throw 'No vocab in DB';
+      }
+
       setState(() {
-        vocab = newVocab;
-        createNewFrames();
+        qFrame = new QuestionFrame(
+          questionNumber: counter.toString(),
+          vocab: newVocab,
+          showAnswer: showAnswer,
+          userInputController: userInputController,
+          flutterTts: widget.flutterTts,
+        );
+        aFrame = new AnswerFrame(
+          vocab: newVocab,
+          userInputController: userInputController,
+        );
+        isLoading = false;
       });
     });
   }
@@ -54,12 +70,21 @@ class _HomePageState extends State<HomePage> {
 
   void displayNextWord() async {
     drawVocab().then((newVocab) {
+      counter++;
+      userInputController.clear();
       setState(() {
-        counter++;
-        vocab = newVocab;
         isShowAnswer = false;
-        userInputController.clear();
-        createNewFrames();
+        qFrame = new QuestionFrame(
+          questionNumber: counter.toString(),
+          vocab: newVocab,
+          showAnswer: showAnswer,
+          userInputController: userInputController,
+          flutterTts: widget.flutterTts,
+        );
+        aFrame = new AnswerFrame(
+          vocab: newVocab,
+          userInputController: userInputController,
+        );
       });
     });
   }
@@ -70,22 +95,12 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void createNewFrames() {
-    qFrame = new QuestionFrame(
-      questionNumber: counter.toString(),
-      vocab: vocab,
-      showAnswer: showAnswer,
-      userInputController: userInputController,
-      flutterTts: widget.flutterTts,
-    );
-    aFrame = new AnswerFrame(
-      vocab: vocab,
-      userInputController: userInputController,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    if(isLoading){
+      return LoadingFrame();
+    }
+
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(

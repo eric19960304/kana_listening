@@ -1,5 +1,6 @@
-import 'dart:typed_data';
-import 'dart:io';
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:path/path.dart';
@@ -8,6 +9,7 @@ import 'package:sqflite/sqflite.dart';
 
 import 'models/vocabs.dart';
 import 'views/home_page.dart';
+import 'views/loading_frame.dart';
 
 void main() {
   runApp(MyApp());
@@ -22,77 +24,100 @@ class MyApp extends StatefulWidget {
 
 class _MyApp extends State<MyApp> {
   Vocabs vocabs;
-  FlutterTts flutterTts;
-  bool isLoading;
+
+  FlutterTts flutterTts = new FlutterTts();
 
   @override
   void initState() {
     super.initState();
-
-    flutterTts = new FlutterTts();
-    isLoading = true;
-    initData().then((result) {
-      setState(() {
-        isLoading = false;
-      });
-    });
   }
 
-  Future<void> initData() async {
-    await flutterTts.setLanguage("ja-JP");
+  @override
+  void dispose() {
+    super.dispose();
+    if (vocabs != null) {
+      vocabs.dispose();
+    }
+  }
 
-    Database db = await initDB();
+  Future<void> initData(BuildContext context) async {
+    await flutterTts.setLanguage("ja-JP");
+    var db = await initDB(context);
     vocabs = Vocabs(db: db);
     await vocabs.init();
   }
 
-  Future<Database> initDB() async {
-    var databasesPath = await getDatabasesPath();
-    var path = join(databasesPath, "sqlite3.db");
+  Future<Database> initDB(BuildContext context) async {
+    final Future<Database> database =
+        openDatabase(
+          join(await getDatabasesPath(), 'words_sqlite3.db'),
+          onCreate: (db, version) { return copyDataToDB(context, db); }, 
+          version: 1
+        );
+    return database;
+  }
 
-    // Check if the database exists
-    var exists = await databaseExists(path);
+  void copyDataToDB(BuildContext context, Database db) async {
+    final String vocabsText = await DefaultAssetBundle.of(context)
+        .loadString("assets/data/n5_to_n1_words.json");
+    final vocabJson = jsonDecode(vocabsText) as List;
+    List<Vocab> vocabList = vocabJson.map((i) => Vocab.fromJson(i)).toList();
+    
+    // print("parsed vocabs: " + vocabList.length.toString());
 
-    if (!exists) {
-      // Make sure the parent directory exists
-      try {
-        await Directory(dirname(path)).create(recursive: true);
-      } catch (_) {}
+    db.execute('''
+      CREATE TABLE IF NOT EXISTS vocabs(
+        word TEXT,
+        meaning TEXT,
+        hiragana TEXT,
+        romaji TEXT,
+        level INTEGER,
+        created_time INTEGER,
+        is_user_defined INTEGER
+      )
+      ''');
+    int timestamp = new DateTime.now().millisecondsSinceEpoch;
 
-      // Copy from asset
-      ByteData data = await rootBundle.load(join("assets", "db", "sqlite3.db"));
-      List<int> bytes =
-          data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-
-      // Write and flush the bytes written
-      await File(path).writeAsBytes(bytes, flush: true);
+    Batch batch = db.batch();
+    for (var w in vocabList) {
+      batch.rawInsert('INSERT INTO vocabs VALUES (?,?,?,?,?,?,?)', [
+        w.word,
+        w.meaning,
+        w.hiragana,
+        w.romaji,
+        w.level,
+        timestamp,
+        0
+      ]);
     }
-
-    var db = await openDatabase(path);
-    return db;
+    await batch.commit();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Kana Listening',
-        theme: ThemeData(
-          brightness: Brightness.dark,
-          primarySwatch: Colors.blue,
-        ),
-        home: isLoading
-            ? Scaffold(
-                appBar: AppBar(
-                  title: Text('Kana Listening'),
-                ),
-                body: Center(
-                  child: Text('Loading...'),
-                ),
-              )
-            : HomePage(
-                title: 'Kana Listening',
-                vocabs: vocabs,
-                flutterTts: flutterTts),
-        debugShowCheckedModeBanner: false);
+    return FutureBuilder<void>(
+        future: initData(context),
+        builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+          return snapshot.connectionState == ConnectionState.done
+              ? MaterialApp(
+                  title: 'Kana Listening',
+                  theme: ThemeData(
+                    brightness: Brightness.dark,
+                    primarySwatch: Colors.blue,
+                  ),
+                  home: HomePage(
+                      title: 'Kana Listening',
+                      vocabs: vocabs,
+                      flutterTts: flutterTts),
+                  debugShowCheckedModeBanner: false)
+              : MaterialApp(
+                  title: 'Kana Listening',
+                  theme: ThemeData(
+                    brightness: Brightness.dark,
+                    primarySwatch: Colors.blue,
+                  ),
+                  home: LoadingFrame(),
+                  debugShowCheckedModeBanner: false);
+        });
   }
 }

@@ -5,7 +5,6 @@ import 'package:sqflite/sqflite.dart';
 class Vocabs {
   Database db;
   
-  final tableName = 'vocabs';
   int vocabCount = 0;
   var rand = new Random();
   var usedVocabsRowid = new LinkedHashSet();
@@ -13,7 +12,13 @@ class Vocabs {
   Vocabs({this.db});
 
   Future init() async {
-    this.vocabCount = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM $tableName'));
+    int count = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM vocabs'));
+    // print("DB vocab count: " + count.toString());
+    this.vocabCount = count;
+  }
+
+  void dispose() async {
+    await this.db.close();
   }
 
   Future<Vocab> drawWord() async {
@@ -28,7 +33,7 @@ class Vocabs {
     }
 
     List<Map<String, dynamic>> result = await db.query(
-      tableName,
+      'vocabs',
       columns: ['word', 'meaning', 'hiragana', 'romaji', 'level'],
       where: 'ROWID = ?',
       whereArgs: [rowid]
@@ -60,6 +65,16 @@ class Vocab {
       hiragana: map['hiragana'],
       romaji: map['romaji'],
       level: map['level']
+    );
+  }
+
+  factory Vocab.fromJson(Map<String, dynamic> json) {
+    return Vocab(
+      word: json["word"],
+      meaning: json["meaning"],
+      hiragana: json["hiragana"],
+      romaji: json["romaji"],
+      level: json["level"]
     );
   }
 

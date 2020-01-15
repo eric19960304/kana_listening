@@ -37,6 +37,10 @@ class _QuestionFrameState extends State<QuestionFrame> {
   }
 
   void playAudio() async {
+    if(widget.vocab==null){
+      return;
+    }
+
     int result =
         await widget.flutterTts.speak(widget.vocab.getPronounciationText());
     if (result == 1) setState(() => isAudioPlaying = true);

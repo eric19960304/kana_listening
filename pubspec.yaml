@@ -1,7 +1,7 @@
 name: kana_listening
 description: An app that randomly draws Japanese vocabularies from N5 to N1 level to test your listening, providing pronunciation and answer checking.
 
-version: 1.0.0+3
+version: 1.0.0+5
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  sqflite:
+  sqflite: ^1.2.0
   http: ^0.12.0
   flutter_tts:
   cupertino_icons: ^0.1.2
@@ -22,7 +22,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/db/sqlite3.db
+    - assets/data/n5_to_n1_words.json
 
 flutter_icons:
   ios: true
