@@ -12,7 +12,7 @@ class AnswerFrame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    bool isInputCorrect = vocab!=null || vocab.isCorrectPronounce(userInputController.text);
+    bool isInputCorrect = vocab!=null && vocab.isCorrectPronounce(userInputController.text);
     String result = isInputCorrect ? 'O' : 'X';
 
     return Container(

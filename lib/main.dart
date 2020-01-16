@@ -11,6 +11,8 @@ import 'models/vocabs.dart';
 import 'views/home_page.dart';
 import 'views/loading_frame.dart';
 
+final String appName = "Kana Listening";
+
 void main() {
   runApp(MyApp());
 }
@@ -48,22 +50,21 @@ class _MyApp extends State<MyApp> {
   }
 
   Future<Database> initDB(BuildContext context) async {
-    final Future<Database> database =
-        openDatabase(
+    final Database db = await openDatabase(
           join(await getDatabasesPath(), 'words_sqlite3.db'),
-          onCreate: (db, version) { return copyDataToDB(context, db); }, 
+          onCreate: (db, version) async {
+            await copyDataToDB(context, db);
+          },
           version: 1
         );
-    return database;
+    return db;
   }
 
-  void copyDataToDB(BuildContext context, Database db) async {
+  Future<void> copyDataToDB(BuildContext context, Database db) async {
     final String vocabsText = await DefaultAssetBundle.of(context)
         .loadString("assets/data/n5_to_n1_words.json");
     final vocabJson = jsonDecode(vocabsText) as List;
     List<Vocab> vocabList = vocabJson.map((i) => Vocab.fromJson(i)).toList();
-    
-    // print("parsed vocabs: " + vocabList.length.toString());
 
     db.execute('''
       CREATE TABLE IF NOT EXISTS vocabs(
@@ -100,18 +101,18 @@ class _MyApp extends State<MyApp> {
         builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
           return snapshot.connectionState == ConnectionState.done
               ? MaterialApp(
-                  title: 'Kana Listening',
+                  title: appName,
                   theme: ThemeData(
                     brightness: Brightness.dark,
                     primarySwatch: Colors.blue,
                   ),
                   home: HomePage(
-                      title: 'Kana Listening',
+                      title: appName,
                       vocabs: vocabs,
                       flutterTts: flutterTts),
                   debugShowCheckedModeBanner: false)
               : MaterialApp(
-                  title: 'Kana Listening',
+                  title: appName,
                   theme: ThemeData(
                     brightness: Brightness.dark,
                     primarySwatch: Colors.blue,
