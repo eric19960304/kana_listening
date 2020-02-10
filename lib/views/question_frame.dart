@@ -36,14 +36,20 @@ class _QuestionFrameState extends State<QuestionFrame> {
     });
   }
 
-  void playAudio() async {
-    if(widget.vocab==null){
-      return;
-    }
+  void playAudio() {
+    if(widget.vocab==null)  return;
 
-    int result =
-        await widget.flutterTts.speak(widget.vocab.getPronounciationText());
-    if (result == 1) setState(() => isAudioPlaying = true);
+    widget.flutterTts
+      .speak(widget.vocab.getPronounciationText())
+      .then(
+        (result) {
+          if (result == 1)
+            setState((){
+              isAudioPlaying = true;
+            });
+        }
+      );
+    
   }
 
   @override
@@ -52,7 +58,7 @@ class _QuestionFrameState extends State<QuestionFrame> {
         (MediaQuery.of(context).viewInsets.bottom - 56.0).abs();
 
     return Expanded(
-        child: new Align(
+        child: Align(
       alignment: Alignment.topCenter,
       child: Container(
           padding: EdgeInsets.only(bottom: textfiledPadding),
@@ -82,7 +88,7 @@ class _QuestionFrameState extends State<QuestionFrame> {
                   ),
                 ),
               ),
-              new Center(
+              Center(
                 child: TextField(
                   textAlign: TextAlign.center,
                   controller: widget.userInputController,

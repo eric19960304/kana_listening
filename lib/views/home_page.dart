@@ -7,12 +7,12 @@ import '../views/answer_frame.dart';
 import '../views/loading_frame.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title, this.vocabs, this.flutterTts})
+  HomePage({Key key, this.title, this.vocabs, this.tts})
       : super(key: key);
 
   final String title;
   final Vocabs vocabs;
-  final FlutterTts flutterTts;
+  final FlutterTts tts;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -22,30 +22,34 @@ class _HomePageState extends State<HomePage> {
   QuestionFrame qFrame;
   AnswerFrame aFrame;
   Vocabs vocabs;
-
-  int counter = 1;
-  bool isShowAnswer = false;
-  bool isLoading = true;
-  TextEditingController userInputController = new TextEditingController();
+  int counter;
+  bool isShowAnswer;
+  bool isLoading;
+  TextEditingController userInputController;
 
   @override
   initState() {
     super.initState();
 
+    counter = 1;
+    isShowAnswer = false;
+    isLoading = false;
+    userInputController = TextEditingController();
+
     drawVocab().then((newVocab) {
-      if(newVocab==null){
+      if (newVocab == null) {
         throw 'No vocab in DB';
       }
 
       setState(() {
-        qFrame = new QuestionFrame(
+        qFrame = QuestionFrame(
           questionNumber: counter.toString(),
           vocab: newVocab,
           showAnswer: showAnswer,
           userInputController: userInputController,
-          flutterTts: widget.flutterTts,
+          flutterTts: widget.tts,
         );
-        aFrame = new AnswerFrame(
+        aFrame = AnswerFrame(
           vocab: newVocab,
           userInputController: userInputController,
         );
@@ -68,24 +72,27 @@ class _HomePageState extends State<HomePage> {
     return v;
   }
 
-  void displayNextWord() async {
-    drawVocab().then((newVocab) {
-      counter++;
-      userInputController.clear();
-      setState(() {
-        isShowAnswer = false;
-        qFrame = new QuestionFrame(
-          questionNumber: counter.toString(),
-          vocab: newVocab,
-          showAnswer: showAnswer,
-          userInputController: userInputController,
-          flutterTts: widget.flutterTts,
-        );
-        aFrame = new AnswerFrame(
-          vocab: newVocab,
-          userInputController: userInputController,
-        );
-      });
+  Future<void> displayNextWord() async {
+    Vocab newVocab = await drawVocab();
+    counter++;
+    userInputController.clear();
+    QuestionFrame qf = QuestionFrame(
+      questionNumber: counter.toString(),
+      vocab: newVocab,
+      showAnswer: showAnswer,
+      userInputController: userInputController,
+      flutterTts: widget.tts,
+    );
+
+    AnswerFrame af = AnswerFrame(
+      vocab: newVocab,
+      userInputController: userInputController,
+    );
+
+    setState(() {
+      isShowAnswer = false;
+      qFrame = qf;
+      aFrame = af;
     });
   }
 
@@ -97,7 +104,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    if(isLoading){
+    if (isLoading) {
       return LoadingFrame();
     }
 
