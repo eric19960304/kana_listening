@@ -4,14 +4,14 @@ import 'package:flutter_tts/flutter_tts.dart';
 import '../models/vocabs.dart'; // includes Vocabs and Vocab classes
 
 class QuestionFrame extends StatefulWidget {
-  const QuestionFrame(
-      {Key key,
-      this.vocab,
-      this.userInputController,
-      this.questionNumber,
-      this.showAnswer,
-      this.flutterTts})
-      : super(key: key);
+  const QuestionFrame({
+    super.key,
+    required this.vocab,
+    required this.userInputController,
+    required this.questionNumber,
+    required this.showAnswer,
+    required this.flutterTts,
+  });
 
   final Vocab vocab;
   final TextEditingController userInputController;
@@ -19,6 +19,7 @@ class QuestionFrame extends StatefulWidget {
   final void Function() showAnswer;
   final FlutterTts flutterTts;
 
+  @override
   _QuestionFrameState createState() => _QuestionFrameState();
 }
 
@@ -37,50 +38,45 @@ class _QuestionFrameState extends State<QuestionFrame> {
   }
 
   void playAudio() {
-    if(widget.vocab==null)  return;
-
-    widget.flutterTts
-      .speak(widget.vocab.getPronounciationText())
-      .then(
-        (result) {
-          if (result == 1)
-            setState((){
-              isAudioPlaying = true;
-            });
-        }
-      );
-    
+    widget.flutterTts.speak(widget.vocab.getPronounciationText()).then((
+      result,
+    ) {
+      if (result == 1)
+        setState(() {
+          isAudioPlaying = true;
+        });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    var textfiledPadding =
-        (MediaQuery.of(context).viewInsets.bottom - 56.0).abs();
+    var textfiledPadding = (MediaQuery.of(context).viewInsets.bottom - 56.0)
+        .abs();
 
     return Expanded(
-        child: Align(
-      alignment: Alignment.topCenter,
-      child: Container(
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: Container(
           padding: EdgeInsets.only(bottom: textfiledPadding),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
                 'Q${widget.questionNumber}',
-                style: Theme.of(context).textTheme.display1,
+                style: Theme.of(context).textTheme.headlineMedium,
                 textAlign: TextAlign.center,
               ),
               Container(
                 margin: const EdgeInsets.only(top: 15.0, bottom: 15.0),
                 child: Ink(
-                  decoration: ShapeDecoration(
+                  decoration: const ShapeDecoration(
                     color: Colors.green,
                     shape: CircleBorder(),
                   ),
                   child: IconButton(
                     icon: isAudioPlaying
-                        ? Icon(Icons.pause)
-                        : Icon(Icons.play_arrow),
+                        ? const Icon(Icons.pause)
+                        : const Icon(Icons.play_arrow),
                     iconSize: 76.0,
                     color: Colors.white,
                     tooltip: 'Pronounce',
@@ -99,21 +95,25 @@ class _QuestionFrameState extends State<QuestionFrame> {
                     hintText: 'Enter the word you heard',
                     filled: true,
                     fillColor: Colors.black26,
-                    contentPadding:
-                        const EdgeInsets.only(bottom: 8.0, top: 8.0),
+                    contentPadding: const EdgeInsets.only(
+                      bottom: 8.0,
+                      top: 8.0,
+                    ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black26),
+                      borderSide: const BorderSide(color: Colors.black26),
                       borderRadius: BorderRadius.circular(25.7),
                     ),
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black26),
+                      borderSide: const BorderSide(color: Colors.black26),
                       borderRadius: BorderRadius.circular(25.7),
                     ),
                   ),
                 ),
               ),
             ],
-          )),
-    ));
+          ),
+        ),
+      ),
+    );
   }
 }

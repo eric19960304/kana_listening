@@ -1,4 +1,4 @@
-package com.example.kana_listening
+package com.eric19960304.kana_listening
 
 import io.flutter.embedding.android.FlutterActivity
 

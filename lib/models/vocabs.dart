@@ -1,25 +1,27 @@
-import 'dart:math';
 import 'dart:collection';
+import 'dart:math';
+
 import 'package:sqflite/sqflite.dart';
 
 class Vocabs {
-  Database db;
+  final Database db;
 
   int vocabCount = 0;
   var rand = Random();
   var usedVocabsRowid = LinkedHashSet();
 
-  Vocabs({this.db});
+  Vocabs({required this.db});
 
   Future<void> init() async {
-    int count =
-        Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM vocabs'));
-    this.vocabCount = count;
+    int? count = Sqflite.firstIntValue(
+      await db.rawQuery('SELECT COUNT(*) FROM vocabs'),
+    );
+    this.vocabCount = count ?? 0;
   }
 
-  Future<Vocab> drawWord() async {
+  Future<Vocab?> drawWord() async {
     if (usedVocabsRowid.length >= vocabCount) {
-      usedVocabsRowid = new LinkedHashSet();
+      usedVocabsRowid = LinkedHashSet();
     }
 
     var rowid = rand.nextInt(vocabCount);
@@ -28,12 +30,14 @@ class Vocabs {
       rowid = rand.nextInt(vocabCount);
     }
 
-    List<Map<String, dynamic>> result = await db.query('vocabs',
-        columns: ['word', 'meaning', 'hiragana', 'romaji', 'level'],
-        where: 'ROWID = ?',
-        whereArgs: [rowid]);
+    List<Map<String, dynamic>> result = await db.query(
+      'vocabs',
+      columns: ['word', 'meaning', 'hiragana', 'romaji', 'level'],
+      where: 'ROWID = ?',
+      whereArgs: [rowid],
+    );
 
-    if (result.length > 0) {
+    if (result.isNotEmpty) {
       usedVocabsRowid.add(rowid);
       return Vocab.fromMap(result[0]);
     }
@@ -43,30 +47,38 @@ class Vocabs {
 }
 
 class Vocab {
-  String word;
-  String meaning;
-  String hiragana;
-  String romaji;
-  int level;
+  final String word;
+  final String meaning;
+  final String hiragana;
+  final String romaji;
+  final int level;
 
-  Vocab({this.word, this.meaning, this.hiragana, this.romaji, this.level});
+  const Vocab({
+    required this.word,
+    required this.meaning,
+    required this.hiragana,
+    required this.romaji,
+    required this.level,
+  });
 
   factory Vocab.fromMap(Map<String, dynamic> map) {
     return Vocab(
-        word: map['word'],
-        meaning: map['meaning'],
-        hiragana: map['hiragana'],
-        romaji: map['romaji'],
-        level: map['level']);
+      word: map['word'] ?? '',
+      meaning: map['meaning'] ?? '',
+      hiragana: map['hiragana'] ?? '',
+      romaji: map['romaji'] ?? '',
+      level: map['level'] ?? 0,
+    );
   }
 
   factory Vocab.fromJson(Map<String, dynamic> json) {
     return Vocab(
-        word: json["word"],
-        meaning: json["meaning"],
-        hiragana: json["hiragana"],
-        romaji: json["romaji"],
-        level: json["level"]);
+      word: json["word"] ?? '',
+      meaning: json["meaning"] ?? '',
+      hiragana: json["hiragana"] ?? '',
+      romaji: json["romaji"] ?? '',
+      level: json["level"] ?? 0,
+    );
   }
 
   String getPronounciationText() {
@@ -74,11 +86,11 @@ class Vocab {
   }
 
   bool hasHiragana() {
-    return this.hiragana.length > 0;
+    return this.hiragana.isNotEmpty;
   }
 
   bool isWantedVocab() {
-    return this.word.length >= 4 && this.meaning.length > 0;
+    return this.word.length >= 4 && this.meaning.isNotEmpty;
   }
 
   bool isCorrectPronounce(String input) {
@@ -88,7 +100,7 @@ class Vocab {
     for (int i = 0; i < romaji.length; i++) {
       if (convertTable.containsKey(romaji[i])) {
         hasNormalized = true;
-        normalizedRomaji += convertTable[romaji[i]];
+        normalizedRomaji += convertTable[romaji[i]]!;
       } else {
         normalizedRomaji += romaji[i];
       }

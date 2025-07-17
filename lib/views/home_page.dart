@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 import '../models/vocabs.dart';
-import '../views/question_frame.dart';
 import '../views/answer_frame.dart';
 import '../views/loading_frame.dart';
+import '../views/question_frame.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title, this.vocabs, this.tts})
-      : super(key: key);
+  const HomePage({
+    super.key,
+    required this.title,
+    required this.vocabs,
+    required this.tts,
+  });
 
   final String title;
   final Vocabs vocabs;
@@ -19,21 +23,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  QuestionFrame qFrame;
-  AnswerFrame aFrame;
-  Vocabs vocabs;
-  int counter;
-  bool isShowAnswer;
-  bool isLoading;
-  TextEditingController userInputController;
+  QuestionFrame? qFrame;
+  AnswerFrame? aFrame;
+  Vocabs? vocabs;
+  int counter = 1;
+  bool isShowAnswer = false;
+  bool isLoading = false;
+  late TextEditingController userInputController;
 
   @override
   initState() {
     super.initState();
 
-    counter = 1;
-    isShowAnswer = false;
-    isLoading = false;
     userInputController = TextEditingController();
 
     drawVocab().then((newVocab) {
@@ -64,16 +65,18 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  Future<Vocab> drawVocab() async {
-    Vocab v;
+  Future<Vocab?> drawVocab() async {
+    Vocab? v;
     do {
       v = await widget.vocabs.drawWord();
-    } while (!v.isWantedVocab());
+    } while (v != null && !v.isWantedVocab());
     return v;
   }
 
   Future<void> displayNextWord() async {
-    Vocab newVocab = await drawVocab();
+    Vocab? newVocab = await drawVocab();
+    if (newVocab == null) return;
+
     counter++;
     userInputController.clear();
     QuestionFrame qf = QuestionFrame(
@@ -105,35 +108,31 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return LoadingFrame();
+      return const LoadingFrame();
     }
 
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(title: Text(widget.title)),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Container(child: isShowAnswer ? aFrame : qFrame),
             Container(
-              child: isShowAnswer ? aFrame : qFrame,
-            ),
-            Container(
-              padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+              padding: const EdgeInsets.only(top: 10.0, bottom: 30.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   Container(
                     child: Ink(
-                      decoration: ShapeDecoration(
+                      decoration: const ShapeDecoration(
                         color: Colors.white,
                         shape: CircleBorder(),
                       ),
                       child: IconButton(
-                        icon: Icon(Icons.visibility),
+                        icon: const Icon(Icons.visibility),
                         iconSize: 36.0,
                         color: Colors.black87,
                         tooltip: 'Show Answer',
@@ -143,12 +142,12 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Container(
                     child: Ink(
-                      decoration: ShapeDecoration(
+                      decoration: const ShapeDecoration(
                         color: Colors.white,
                         shape: CircleBorder(),
                       ),
                       child: IconButton(
-                        icon: Icon(Icons.navigate_next),
+                        icon: const Icon(Icons.navigate_next),
                         iconSize: 36.0,
                         color: Colors.black87,
                         tooltip: 'Next Word',
@@ -158,7 +157,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

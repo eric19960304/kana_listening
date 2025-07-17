@@ -37,6 +37,10 @@
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
+**/gradle/**
+build/
+.hprof
+.aab
 
 # iOS/XCode related
 **/ios/**/*.mode1v3
