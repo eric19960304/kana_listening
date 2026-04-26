@@ -37,15 +37,58 @@ class _QuestionFrameState extends State<QuestionFrame> {
     });
   }
 
-  void playAudio() {
-    widget.flutterTts.speak(widget.vocab.getPronounciationText()).then((
-      result,
-    ) {
-      if (result == 1)
+  void playAudio() async {
+    try {
+      // Try multiple approaches to ensure Japanese TTS works
+      bool japaneseSet = false;
+
+      // Approach 1: Try ja-JP
+      try {
+        await widget.flutterTts.setLanguage("ja-JP");
+        japaneseSet = true;
+      } catch (e) {
+        print("Failed to set ja-JP in playAudio: $e");
+      }
+
+      // Approach 2: Try ja if ja-JP failed
+      if (!japaneseSet) {
+        try {
+          await widget.flutterTts.setLanguage("ja");
+          japaneseSet = true;
+        } catch (e) {
+          print("Failed to set ja in playAudio: $e");
+        }
+      }
+
+      final text = widget.vocab.getPronounciationText();
+      print("TTS speaking text: $text (Japanese set: $japaneseSet)");
+
+      final result = await widget.flutterTts.speak(text);
+      print("TTS speak result: $result");
+
+      if (result == 1) {
         setState(() {
           isAudioPlaying = true;
         });
-    });
+      } else {
+        print("TTS failed to speak, result: $result");
+      }
+    } catch (e) {
+      print("Error in playAudio: $e");
+      // Try fallback with English
+      try {
+        await widget.flutterTts.setLanguage("en-US");
+        final text = widget.vocab.getPronounciationText();
+        final result = await widget.flutterTts.speak(text);
+        if (result == 1) {
+          setState(() {
+            isAudioPlaying = true;
+          });
+        }
+      } catch (e2) {
+        print("Fallback TTS also failed: $e2");
+      }
+    }
   }
 
   @override
