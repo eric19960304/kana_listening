@@ -27,4 +27,10 @@ flutter pub get
 flutter pub run flutter_launcher_icons:main
 ```
 
+## Build app bundle for Andorid
+
+```
+flutter build appbundle
+```
+
 
