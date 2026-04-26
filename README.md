@@ -22,15 +22,17 @@ For the word list, please refer to [/assets/data/n5_to_n1_words.json](https://ra
 
 Need to re-generate icon every time after cleaning project:
 ```
-flutter clean
-flutter pub get
 flutter pub run flutter_launcher_icons:main
 ```
 
 ## Build app bundle for Andorid
 
 ```
+flutter clean
+flutter pub get
+flutter pub run flutter_launcher_icons:main
 flutter build appbundle
 ```
 
+the bundle file will be located at `build\app\outputs\bundle\release\app-release.aab`
 

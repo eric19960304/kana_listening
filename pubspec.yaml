@@ -1,7 +1,7 @@
 name: kana_listening
 description: An app that randomly draws Japanese vocabularies from N5 to N1 level to test your listening, providing pronunciation and answer checking.
 
-version: 1.1.0+29
+version: 1.1.0+30
 
 environment:
   sdk: ">=3.8.1 <4.0.0"
